@@ -2,10 +2,14 @@ from asyncio.windows_events import NULL
 from operator import truediv
 import time
 from discord import guild
+from discord.player import FFmpegAudio, FFmpegPCMAudio
 from discord.voice_client import VoiceClient
 import nacl
 import json
 import os
+import youtube_dl
+from youtube_dl.YoutubeDL import YoutubeDL
+import youtube_dl.downloader
 import discord
 from discord import channel
 from discord.channel import VoiceChannel
@@ -27,19 +31,23 @@ async def on_message(message:discord.Message):
     if message.author == client.user:
         return
     else:
-        if message.content.upper() == 'POTATO':
-            await message.channel.send('PotAHto')
-        if message.content.upper() == 'TOMATO':
-            await message.channel.send('TomAHto')        
-        if message.content.upper() == 'CONNECTOME':
+        print (message.content.upper())
+        if 'POTATO' in message.content.upper():
+            await message.channel.send(ReplaceAllOccurences(message.content,'potato','PotAHto'))
+        #if 'POTATO' in message.content.upper():
+        #   await message.channel.send("PotAHto")
+        if "TOMATO" in message.content.upper():
+            await message.channel.send("TomAHto")        
+        if message.content.upper() == "CONNECTTOME":
+            print("connecting to user")
             await connectToUserVoiceChannel(message.author)
-        if(message.content.upper() == 'DISCONNECTFROMME'):
+        if(message.content.upper() == "DISCONNECTFROMME"):
+            print("disconnecting to user")
             await disconnectFromVoiceChannel(message.author)
-        if(message.content.upper() == 'KILLALLCONNECTIONS'):
+        if(message.content.upper() == "KILLALLCONNECTIONS"):
             await killConnections()
-        if(message.content.upper == 'PLAYTESTAUDIO'):
+        if(message.content.upper() == 'PLAYTESTAUDIO'):
             await playTestAudio(message.author)
-            str.
 
 async def connectToUserVoiceChannel(user:discord.user):
     for voiceClient in client.voice_clients:
@@ -73,9 +81,40 @@ async def playTestAudio(user:discord.user):
             if user.voice == None or user.voice.channel != voiceClient.channel:
                 return
             else:
-                print("starting to play audio!")
-                voiceClient.play('C:/Users/Tyson Shepherd/Music/test.mp3')
+                print("starting test audio...")
+                ytdlOptions = {
+                    'format':'bestaudio/best',
+                    'outtmpl':'C:/Users/Tyson Shepherd/Desktop/GiggaBoi/test.mp3',
+                    'postprocessors': [{
+                        'key':'FFmpegExtractAudio',
+                        'preferredcodec':'mp3',
+                        'preferredquality':'0'
+                    }]
+                }
+                #if(os.path.exists('C:/Users/Tyson Shepherd/Desktop/GiggaBoi/test.mp3')):
+                #    os.remove('C:/Users/Tyson Shepherd/Desktop/GiggaBoi/test.mp3')
+                #else:
+                #    print("file doesn't exist")
+                #YoutubeDL(ytdlOptions).download(['https://www.youtube.com/watch?v=h2dJ-JUzhVs'])
+                audioFile = discord.FFmpegPCMAudio("C:/Users/Tyson Shepherd/Desktop/GiggaBoi/WAP.mp3", executable="C:/Users/Tyson Shepherd/Desktop/GiggaBoi/ffmpeg/bin/ffmpeg.exe")
+                voiceClient.play(audioFile)
+                print("playing audio")
 
-
+def ReplaceAllOccurences(input:str, substringToReplace:str, substringSubstituion:str):
+    output = input
+    upperCaseInput = input.upper()
+    
+    i=0
+    stepbackAmount = len(substringSubstituion) - len(substringToReplace)
+    stepCount = 0
+    while i < len(upperCaseInput):
+        foundIndex = upperCaseInput.find(substringToReplace.upper(),i)
+        if foundIndex != -1:
+            upperCaseInput = upperCaseInput.replace(substringToReplace.upper(),substringSubstituion,1)
+            i = foundIndex + len(substringToReplace) + stepbackAmount
+            output = output[0:foundIndex] + substringSubstituion + output[foundIndex + len(substringToReplace):len(output)]
+        else:
+            break
+    return(output)
 
 client.run(TOKEN)
