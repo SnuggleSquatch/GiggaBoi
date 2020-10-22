@@ -49,7 +49,7 @@ async def on_message(message:discord.Message):
             await killConnections()
         if(message.content.upper() == 'PLAYTESTAUDIO'):
             await playTestAudio(message.author)
-        if(message.content.upper() == 'BITCOIN'):
+        if 'BITCOIN' in message.content.upper():
             await gilfoylesayshi(message.author)   
 
 async def connectToUserVoiceChannel(user:discord.user):
