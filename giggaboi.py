@@ -17,6 +17,7 @@ from discord.message import Message
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 configFile = open(os.path.join(__location__, 'config.json'))
+
 jsonConfig = json.loads(configFile.read())
 TOKEN = jsonConfig['TOKEN']
 
@@ -104,7 +105,7 @@ async def playTestAudio(user:discord.user):
 
 async def gilfoylesayshi(user:discord.user):
     for VoiceClient in client.voice_clients:
-        if VoiceClient.guild == user.guild;
+        if VoiceClient.guild == user.guild:
             if user.voice == None or user.VoiceChannel != VoiceClient.channel:
                 return
             else:
