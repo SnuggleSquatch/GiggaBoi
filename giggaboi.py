@@ -48,6 +48,8 @@ async def on_message(message:discord.Message):
             await killConnections()
         if(message.content.upper() == 'PLAYTESTAUDIO'):
             await playTestAudio(message.author)
+        if(message.content.upper() == "BITCOIN"):
+            await gilfoylesayshi(message.author)   
 
 async def connectToUserVoiceChannel(user:discord.user):
     for voiceClient in client.voice_clients:
@@ -100,6 +102,24 @@ async def playTestAudio(user:discord.user):
                 voiceClient.play(audioFile)
                 print("playing audio")
 
+async def gilfoylesayshi(user:discord.user):
+    for VoiceClient in client.voice_clients:
+        if VoiceClient.guild == user.guild;
+            if user.voice == None or user.VoiceChannel != VoiceClient.channel:
+                return
+            else:
+                ytdlOptions = {
+                    'format':'bestaudio/best',
+                    'outtmpl':'C:/Users/Tyson Shepherd/Desktop/GiggaBoi/test.mp3',
+                    'postprocessors': [{
+                        'key':'FFmpegExtractAudio',
+                        'preferredcodec':'mp3',
+                        'preferredquality':'0'
+                    }]
+                }
+                audioFile = discord.FFmpegPCMAudio("C:/Users/Tyson Shepherd/Desktop/GiggaBoi/gilfoylesayshi.mp3", executable="C:/Users/Tyson Shepherd/Desktop/GiggaBoi/ffmpeg/bin/ffmpeg.exe")                  
+                VoiceClient.play(audioFile)
+                
 def ReplaceAllOccurences(input:str, substringToReplace:str, substringSubstituion:str):
     output = input
     upperCaseInput = input.upper()
